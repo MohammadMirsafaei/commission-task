@@ -34,6 +34,7 @@ class Core
 
     /**
      * Adds new currency to list of supported currencies
+     * @param Currency $currency
      * @return string
      */
     public function addCurrency(Currency $currency)

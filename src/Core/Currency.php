@@ -12,13 +12,20 @@ class Currency
      * @var string
      */
     private string $name;
+
+    /**
+     * @var int
+     */
+    private int $precision;
     
     /**
      * @param string $name
+     * @param int $precision
      */
-    public function __construct(string $name)
+    public function __construct(string $name, int $precision = 2)
     {
         $this->name = $name;
+        $this->precision = $precision;
     }
 
     /**
@@ -28,6 +35,15 @@ class Currency
     public function getName()
     {
         return $this->name;
+    }
+
+    /**
+     * Returns precision of currency
+     * @return int
+     */
+    public function getPrecision()
+    {
+        return $this->precision;
     }
 
     /**
