@@ -15,7 +15,7 @@ class ExchangeRateProxyTest extends TestCase
      */
     public function testFetchingExchangeRates()
     {
-        $rate = ExchangeRateProxy::getExchageRate((new Currency('AED'))->getName());
+        $rate = ExchangeRateProxy::getExchageRate((new Currency('USD'))->getName());
         $this->assertTrue(is_float($rate), 'returned rate is float');
     }
 

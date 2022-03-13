@@ -38,9 +38,8 @@ class Withdraw extends Transaction
      */
     private function calculateBusinessCommisionFee(): string
     {
-        return bcmul(
-            number_format($this->getAmount(), $this->getCurrency()->getPrecision(), '.', ''),
-            '0.005',
+        return $this->customRound(
+            $this->getAmount() * 0.005,
             $this->getCurrency()->getPrecision()
         );
     }
@@ -52,39 +51,57 @@ class Withdraw extends Transaction
     private function calculatePrivateCommisionFee(): string
     {
         // Getting tansaction's week transactions
-        $weekTransactions = $this->getClient()->getTransactionsOfWeek($this->getCreatedAt());
+        $weekWithdraws = $this->getClient()->getWithdrawsOfWeekOfWeek($this->getCreatedAt());
 
         // Free of charge only for the first 3 withdraw operations per a week
-        if(count($weekTransactions) >= 3) {
-            return bcmul(
-                number_format($this->getAmount(), $this->getCurrency()->getPrecision(), '.', ''),
-                '0.003',
+        if(count($weekWithdraws) >= 3 || $this->maxFreeChargeReached($weekWithdraws)) {
+            return $this->customRound(
+                $this->getAmount() * 0.003,
                 $this->getCurrency()->getPrecision()
             );
         }
 
         // Calculating exceeded amount
-        $amount = $this->calculateExceededAmount($weekTransactions);
-        return bcmul(
-            number_format($amount, $this->getCurrency()->getPrecision(), '.', ''),
-            '0.003',
+        $amount = $this->calculateExceededAmount($weekWithdraws) * $this->getCurrency()->getRate();
+        if($this->getAmount() == 1000 && $this->getClient()->getId() == 1) {
+            echo "hrerer: {$amount}" . PHP_EOL;
+        }
+        return $this->customRound(
+            $amount * 0.003,
             $this->getCurrency()->getPrecision()
-        ); 
+        );
 
     }
 
     /**
+     * Checks if total amount of withdraws are more than 1000 EUR
+     * @param \Mirsafaei\CommissionTask\Core\Transaction[] $weekWithdraws
+     * @return bool
+     */
+    private function maxFreeChargeReached(array $weekWithdraws): bool
+    {
+        $usedAmount = 0;
+        foreach($weekWithdraws as $transaction) {
+            $usedAmount += ($transaction->getAmount() / $transaction->getCurrency()->getRate());
+        }
+        if ($usedAmount > 1000)
+            return true;
+        return false;
+    }
+
+    /**
      * Calculates exceeded amount that commision must be applied to
-     * @param \Mirsafaei\CommissionTask\Core\Transaction[] $weekTransactions
+     * @param \Mirsafaei\CommissionTask\Core\Transaction[] $weekWithdraws
      * @return float
      */
-    private function calculateExceededAmount(array $weekTransactions): float
+    private function calculateExceededAmount(array $weekWithdraws): float
     {
         $maxAmount = 1000;
         $usedAmount = 0;
-        foreach($weekTransactions as $transaction) {
-            $usedAmount += $transaction->getAmount();
+        foreach($weekWithdraws as $transaction) {
+            $usedAmount += ($transaction->getAmount() / $transaction->getCurrency()->getRate());
         }
+        $usedAmount += ($this->getAmount() / $this->getCurrency()->getRate());
         return ($usedAmount - $maxAmount <= 0)? 0 : $usedAmount - $maxAmount;
     }
     

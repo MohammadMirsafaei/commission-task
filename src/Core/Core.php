@@ -4,6 +4,10 @@ declare(strict_types=1);
 
 namespace Mirsafaei\CommissionTask\Core;
 
+use DateTime;
+use Mirsafaei\CommissionTask\Exceptions\CurrencyNotSupportedException;
+use PHPUnit\Framework\DataProviderTestSuite;
+
 class Core
 {
     /**
@@ -60,16 +64,68 @@ class Core
 
     /**
      * Adds new client to list if needed
-     * @param Client $client
+     * @param int $id
+     * @param string $type
+     * @return Client
      */
-    public function addClient(Client $client)
+    public function &addClient(int $id, string $type)
     {
+        $client = new Client($id, ($type === 'private') ? Client::PRIVATE_CLIENT : Client::BUSINESS_CLIENT);
         foreach (self::$clients as $c) {
             if ($c->getId() === $client->getId()) {
-                return;
+                return $c;
             }
         }
         self::$clients[] = $client;
+        return self::$clients[count(self::$clients)-1];
+    }
+
+    /**
+     * Finds client
+     * @param int $id
+     * @return Client
+     */
+    public function &findClient(int $id): Client
+    {
+        foreach (self::$clients as $client) {
+            if ($client->getId() === $id) {
+                return $client;
+            }
+        }
+    }
+
+    /**
+     * Finds currency
+     * @param string $name
+     * @return Currency
+     * @throws CurrencyNotSupportedException
+     */
+    public function findCurrency(string $name): Currency
+    {
+        foreach (self::$currencies as $currency) {
+            if ($currency->getName() === $name) {
+                return $currency;
+            }
+        }
+        throw new CurrencyNotSupportedException("Currency '{$name}' is not supported.");
+    }
+
+    /**
+     * Adds new transaction
+     * @param int $id
+     * @param string $type
+     * @return Transaction
+     */
+    public function &addTransaction(int $id, string $createdAt, string $transactionType, float $amount, string $currency): Transaction
+    {
+        $client = &$this->findClient($id);
+        if ($transactionType === 'deposit') {
+            $transaction = new Deposit(new DateTime($createdAt), $client, $amount, $this->findCurrency($currency));
+        } else {
+            $transaction = new Withdraw(new DateTime($createdAt), $client, $amount, $this->findCurrency($currency));
+        }
+        return $transaction;
+
     }
     
 }

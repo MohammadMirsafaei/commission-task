@@ -83,5 +83,19 @@ abstract class Transaction
      * @return string
      */
     abstract public function calculateCommisionFee(): string;
+
+    /**
+     * Custom round
+     * @param float $number
+     * @param int $precision
+     * @return string
+     */
+    function customRound(float $number, int $precision = 0): string
+    {
+        $number = ceil($number * (pow(10,$precision)));
+        return number_format($number/pow(10,$precision), $precision, '.', '');
+    }
+
+    
     
 }

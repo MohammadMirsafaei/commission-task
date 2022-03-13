@@ -21,9 +21,14 @@ class ExchangeRateProxy
      */
     private static function fetchExchangeRatesFormAPI(): array
     {
-        $client = new Client();
-        $response = $client->request('GET', self::API_URL);
-        return json_decode((string) $response->getBody(), true)['rates'];
+        // $client = new Client();
+        // $response = $client->request('GET', self::API_URL);
+        // return json_decode((string) $response->getBody(), true)['rates'];
+        return [
+            'EUR' => 1,
+            'USD' => 1.1497,
+            'JPY' => 129.53
+        ];
     }
 
     /**

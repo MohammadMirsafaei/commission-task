@@ -26,7 +26,7 @@ class Client
     /**
      * @var \Mirsafaei\CommissionTask\Core\Transaction[]
      */
-    private array $transactions;
+    private array $transactions = [];
     
     /**
      * @param int $id
@@ -66,10 +66,10 @@ class Client
     }
 
     /**
-     * Returns transactions of week of provided date
+     * Returns withdraws of week of provided date
      * @return \Mirsafaei\CommissionTask\Core\Transaction[]
      */
-    public function getTransactionsOfWeek(DateTime $date): array
+    public function getWithdrawsOfWeekOfWeek(DateTime $date): array
     {
         // Finding start and end of week
         $startDate = DateTime::createFromFormat(
@@ -86,10 +86,20 @@ class Client
             $this->transactions, 
             function(Transaction $transaction) use ($startDate, $endDate) {
                 if($transaction->getCreatedAt() >= $startDate
-                    && $transaction->getCreatedAt() <= $endDate) {
+                    && $transaction->getCreatedAt() <= $endDate
+                    && is_a($transaction, Withdraw::class)) {
                     return true;
                 }
                 return false;
         });
+    }
+
+    /**
+     * Adds transaction to list of transactions
+     * @param Transaction $transaction
+     */
+    public function addTransaction(Transaction $transaction)
+    {
+        $this->transactions[] = $transaction;
     }
 }

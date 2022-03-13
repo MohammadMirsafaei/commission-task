@@ -25,9 +25,8 @@ class Deposit extends Transaction
      */
     public function calculateCommisionFee(): string 
     {
-        return bcmul(
-            number_format($this->getAmount(), $this->getCurrency()->getPrecision(), '.', ''),
-            '0.0003',
+        return $this->customRound(
+            $this->getAmount() * 0.0003,
             $this->getCurrency()->getPrecision()
         );
     }
