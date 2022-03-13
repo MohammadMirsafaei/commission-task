@@ -7,6 +7,7 @@ namespace Mirsafaei\CommissionTask\Tests\Core;
 use Mirsafaei\CommissionTask\Core\Client;
 use Mirsafaei\CommissionTask\Core\Core;
 use Mirsafaei\CommissionTask\Core\Currency;
+use Mirsafaei\CommissionTask\Helper\ExchangeRateProxy;
 use Mirsafaei\CommissionTask\Tests\CsvFileIterator;
 use PHPUnit\Framework\TestCase;
 
@@ -23,6 +24,8 @@ class CoreTest extends TestCase
         $this->core->addCurrency(new Currency('EUR'));
         $this->core->addCurrency(new Currency('USD'));
         $this->core->addCurrency(new Currency('JPY', 0));
+
+        ExchangeRateProxy::setTestMode();
     }
 
     /**

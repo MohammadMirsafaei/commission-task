@@ -9,7 +9,7 @@ use DateTime;
 class Withdraw extends Transaction
 {
     /**
-     * @param DateTime $createAt
+     * @param \DateTime $createAt
      * @param \Mirsafaei\CommissionTask\Core\Client $client
      * @param float $amount
      * @param \Mirsafaei\CommissionTask\Core\Currency $currency
@@ -63,9 +63,6 @@ class Withdraw extends Transaction
 
         // Calculating exceeded amount
         $amount = $this->calculateExceededAmount($weekWithdraws) * $this->getCurrency()->getRate();
-        if($this->getAmount() == 1000 && $this->getClient()->getId() == 1) {
-            echo "hrerer: {$amount}" . PHP_EOL;
-        }
         return $this->customRound(
             $amount * 0.003,
             $this->getCurrency()->getPrecision()

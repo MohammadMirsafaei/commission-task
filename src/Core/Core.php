@@ -11,17 +11,17 @@ use PHPUnit\Framework\DataProviderTestSuite;
 class Core
 {
     /**
-     * @var Core|null
+     * @var \Mirsafaei\CommissionTask\Core\Core|null
      */
     private static $instance;
 
     /**
-     * @var Currency[]
+     * @var \Mirsafaei\CommissionTask\Core\Currency[]
      */
     private static array $currencies = [];
 
     /**
-     * @var Client[]
+     * @var \Mirsafaei\CommissionTask\Core\Client[]
      */
     private static array $clients = [];
 
@@ -29,7 +29,7 @@ class Core
 
     /**
      * Returns instance or create it if there is none
-     * @return Core
+     * @return \Mirsafaei\CommissionTask\Core\Core
      */
     public static function getInstance(): Core
     {
@@ -43,7 +43,7 @@ class Core
 
     /**
      * Adds new currency to list of supported currencies
-     * @param Currency $currency
+     * @param \Mirsafaei\CommissionTask\Core\Currency $currency
      * @return string
      */
     public function addCurrency(Currency $currency)
@@ -55,7 +55,7 @@ class Core
 
     /**
      * Retuens list of loaded currencies
-     * @return Currency[]
+     * @return \Mirsafaei\CommissionTask\Core\Currency[]
      */
     public function getCurrencies(): array
     {
@@ -66,7 +66,7 @@ class Core
      * Adds new client to list if needed
      * @param int $id
      * @param string $type
-     * @return Client
+     * @return \Mirsafaei\CommissionTask\Core\Client
      */
     public function &addClient(int $id, string $type)
     {
@@ -83,7 +83,7 @@ class Core
     /**
      * Finds client
      * @param int $id
-     * @return Client
+     * @return \Mirsafaei\CommissionTask\Core\Client
      */
     public function &findClient(int $id): Client
     {
@@ -97,8 +97,8 @@ class Core
     /**
      * Finds currency
      * @param string $name
-     * @return Currency
-     * @throws CurrencyNotSupportedException
+     * @return \Mirsafaei\CommissionTask\Core\Currency
+     * @throws \Mirsafaei\CommissionTask\Exceptions\CurrencyNotSupportedException
      */
     public function findCurrency(string $name): Currency
     {
@@ -114,7 +114,7 @@ class Core
      * Adds new transaction
      * @param int $id
      * @param string $type
-     * @return Transaction
+     * @return \Mirsafaei\CommissionTask\Core\Transaction
      */
     public function &addTransaction(int $id, string $createdAt, string $transactionType, float $amount, string $currency): Transaction
     {

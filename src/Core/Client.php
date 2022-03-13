@@ -32,11 +32,12 @@ class Client
      * @param int $id
      * @param int $clientType
      */
-    public function __construct(int $id, int $clientType)
+    public function __construct(int $id, int $clientType) 
     {
         $this->id = $id;
+
         $this->clientType = $clientType;
-    }
+    } 
 
     /**
      * Returns id of client
@@ -76,6 +77,7 @@ class Client
             'U', 
             (string)strtotime("{$date->format('o')}-W{$date->format('W')}-1")
         );
+
         $endDate = DateTime::createFromFormat(
             'Y-m-d',
             $startDate->format('Y-m-d')
@@ -96,7 +98,7 @@ class Client
 
     /**
      * Adds transaction to list of transactions
-     * @param Transaction $transaction
+     * @param \Mirsafaei\CommissionTask\Core\Transaction $transaction
      */
     public function addTransaction(Transaction $transaction)
     {
