@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Mirsafaei\CommissionTask\Core;
 
+use DateInterval;
+use DateTime;
+
 class Client
 {
     public const PRIVATE_CLIENT = 1;
@@ -21,7 +24,7 @@ class Client
     private int $clientType;
 
     /**
-     * @var Transaction[]
+     * @var \Mirsafaei\CommissionTask\Core\Transaction[]
      */
     private array $transactions;
     
@@ -55,10 +58,38 @@ class Client
     
     /**
      * Returns transactions of client
-     * @return Transaction[]
+     * @return \Mirsafaei\CommissionTask\Core\Transaction[]
      */
     public function getTransactions(): array
     {
         return $this->transactions;
+    }
+
+    /**
+     * Returns transactions of week of provided date
+     * @return \Mirsafaei\CommissionTask\Core\Transaction[]
+     */
+    public function getTransactionsOfWeek(DateTime $date): array
+    {
+        // Finding start and end of week
+        $startDate = DateTime::createFromFormat(
+            'U', 
+            (string)strtotime("{$date->format('o')}-W{$date->format('W')}-1")
+        );
+        $endDate = DateTime::createFromFormat(
+            'Y-m-d',
+            $startDate->format('Y-m-d')
+        )->add(DateInterval::createFromDateString('6 days'));
+
+        // Filtering results
+        return array_filter(
+            $this->transactions, 
+            function(Transaction $transaction) use ($startDate, $endDate) {
+                if($transaction->getCreatedAt() >= $startDate
+                    && $transaction->getCreatedAt() <= $endDate) {
+                    return true;
+                }
+                return false;
+        });
     }
 }

@@ -16,6 +16,11 @@ class Core
      */
     private static array $currencies = [];
 
+    /**
+     * @var Client[]
+     */
+    private static array $clients = [];
+
     private function __construct() { }
 
     /**
@@ -51,6 +56,20 @@ class Core
     public function getCurrencies(): array
     {
         return self::$currencies;
+    }
+
+    /**
+     * Adds new client to list if needed
+     * @param Client $client
+     */
+    public function addClient(Client $client)
+    {
+        foreach (self::$clients as $c) {
+            if ($c->getId() === $client->getId()) {
+                return;
+            }
+        }
+        self::$clients[] = $client;
     }
     
 }
