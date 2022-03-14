@@ -13,6 +13,10 @@ $ composer run test
 $this->core->addCurrency(new Currency('<NAME>', <PRECISION>));
 ```
 
+## Changing exchange rates in test mode
+
+Edit `ExchangeRateProxy.php` file
+
 ## Changing input file
 Just change input.csv in `tests/core`. 
 
